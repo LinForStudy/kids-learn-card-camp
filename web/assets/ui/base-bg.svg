@@ -1,0 +1,12 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Command base background">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#102016"/><stop offset=".58" stop-color="#172719"/><stop offset="1" stop-color="#08100b"/></linearGradient><radialGradient id="lamp" cx="50%" cy="32%" r="45%"><stop stop-color="#e7b64a" stop-opacity=".22"/><stop offset="1" stop-color="#e7b64a" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1200" height="520" fill="url(#sky)"/>
+  <rect width="1200" height="520" fill="url(#lamp)"/>
+  <path d="M0 342c100-34 197-47 306-36 126 14 241-28 358-25 171 4 299 63 536 20v219H0z" fill="#0b160e"/>
+  <path d="M130 330h154l-38 96H92zM760 316h180l45 118H718z" fill="#1d3422" stroke="#bb8f37" stroke-width="5" opacity=".92"/>
+  <path d="M504 234h190l60 199H443z" fill="#223b25" stroke="#d6a544" stroke-width="6"/>
+  <path d="M586 234v198M454 376h288M514 288h162" stroke="#d6a544" stroke-width="4" opacity=".5"/>
+  <path d="M94 210l34 80H60zM993 204l44 110h-88zM245 200l42 124h-84zM1050 250l36 86h-72z" fill="#102818"/>
+  <path d="M332 390c126-48 267-54 426-2" fill="none" stroke="#3c9d8d" stroke-width="7" opacity=".32"/>
+  <circle cx="614" cy="170" r="42" fill="#e7b64a" opacity=".12"/>
+</svg>

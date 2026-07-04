@@ -1,0 +1,44 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "com.vibecoding.kidslearncardcamp"
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.vibecoding.kidslearncardcamp"
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName "0.1.0"
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs = ["../../web"]
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("../release-keystore.jks")
+            storePassword "kids1234"
+            keyAlias "release"
+            keyPassword "kids1234"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+        }
+    }
+
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
+            outputFileName = "kids-learn-card-camp-v${variant.versionName}-${variant.name}.apk"
+        }
+    }
+}

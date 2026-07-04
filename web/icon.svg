@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108">
+  <rect width="108" height="108" rx="28" fill="#58b9ff"/>
+  <circle cx="55" cy="54" r="36" fill="#fff8df"/>
+  <path d="M28 63c9 15 31 21 48 3" fill="none" stroke="#36b37e" stroke-width="7" stroke-linecap="round"/>
+  <path d="M40 39l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="#ffb84d"/>
+  <text x="57" y="52" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#233348">A</text>
+</svg>

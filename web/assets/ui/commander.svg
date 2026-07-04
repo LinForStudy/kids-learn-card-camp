@@ -1,0 +1,13 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" role="img" aria-label="Young commander avatar">
+  <defs><linearGradient id="skin" x1="0" x2="1"><stop stop-color="#ffd7a8"/><stop offset="1" stop-color="#efaa6d"/></linearGradient><linearGradient id="cap" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#314d2b"/><stop offset="1" stop-color="#172719"/></linearGradient></defs>
+  <rect width="220" height="220" rx="48" fill="#e7f1dc"/>
+  <circle cx="110" cy="120" r="68" fill="#2c6a5d" opacity=".18"/>
+  <path d="M44 190c10-38 40-58 66-58s56 20 66 58" fill="#1c3421"/>
+  <circle cx="110" cy="98" r="54" fill="url(#skin)" stroke="#70472a" stroke-width="4"/>
+  <path d="M58 88c10-40 48-59 91-42 9 4 17 12 21 24-22-5-43-11-64-23-13 18-29 29-48 41Z" fill="#442817"/>
+  <path d="M54 76c23-33 72-42 112-18l8 26H48z" fill="url(#cap)" stroke="#d9a63b" stroke-width="4"/>
+  <path d="M71 72h78l-12 25H83z" fill="#223b25"/>
+  <path d="M110 54l7 15 16 2-12 11 4 16-15-8-15 8 4-16-12-11 16-2z" fill="#e7b64a"/>
+  <circle cx="91" cy="103" r="6" fill="#27170d"/><circle cx="129" cy="103" r="6" fill="#27170d"/>
+  <path d="M90 128c13 12 28 12 41 0" fill="none" stroke="#7a3e2d" stroke-width="5" stroke-linecap="round"/>
+</svg>

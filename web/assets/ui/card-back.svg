@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 260" role="img" aria-label="Card back">
+  <rect x="6" y="6" width="168" height="248" rx="14" fill="#162617" stroke="#d9a63b" stroke-width="8"/>
+  <rect x="22" y="22" width="136" height="216" rx="10" fill="#0d1710" stroke="#6c5523" stroke-width="3"/>
+  <path d="M90 48l16 36 39 3-30 26 9 38-34-20-34 20 9-38-30-26 39-3z" fill="#d9a63b"/>
+  <path d="M50 186h80M64 205h52" stroke="#3c9d8d" stroke-width="8" stroke-linecap="round"/>
+</svg>

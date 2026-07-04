@@ -1,0 +1,7 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" preserveAspectRatio="none" role="img" aria-label="Tactical table texture">
+  <rect width="900" height="1200" fill="#0b130f"/>
+  <path d="M0 242c190-54 348-42 510 5 128 37 247 30 390-18M0 598c173-63 363-64 544-2 121 41 229 45 356 7M0 948c166-38 315-23 490 32 165 52 273 15 410-26" fill="none" stroke="#4d613f" stroke-width="4" opacity=".22"/>
+  <path d="M450 0v1200M0 600h900" stroke="#e7b64a" stroke-width="3" opacity=".12"/>
+  <path d="M80 160h740v880H80z" fill="none" stroke="#e7b64a" stroke-width="5" opacity=".08"/>
+  <circle cx="450" cy="600" r="160" fill="none" stroke="#e7b64a" stroke-width="5" opacity=".08"/>
+</svg>

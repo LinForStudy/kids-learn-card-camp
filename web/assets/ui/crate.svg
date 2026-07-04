@@ -1,0 +1,8 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" role="img" aria-label="Supply crate">
+  <defs><linearGradient id="box" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#806036"/><stop offset=".55" stop-color="#3a2c1c"/><stop offset="1" stop-color="#171914"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <ellipse cx="120" cy="154" rx="88" ry="18" fill="#000" opacity=".28"/>
+  <path d="M38 68h164l-15 84H53z" fill="url(#box)" stroke="#e7b64a" stroke-width="6"/>
+  <path d="M52 36h136l18 34H34z" fill="#634725" stroke="#e7b64a" stroke-width="6"/>
+  <path d="M56 78h128M71 66l-10 86M169 66l10 86M102 68v82M138 68v82" stroke="#d6a544" stroke-width="5" opacity=".75"/>
+  <path d="M120 54l8 17 19 2-14 13 4 19-17-10-17 10 4-19-14-13 19-2z" fill="#ffe08a" filter="url(#glow)"/>
+</svg>

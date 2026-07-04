@@ -1,0 +1,20 @@
+# IDE
+.idea/
+*.iml
+
+# Android build
+android/.gradle/
+android/.gradle-user-home/
+android/.idea/
+android/app/build/
+android/build/
+android/local.properties
+android/gradle.properties
+
+# Signing
+*.jks
+*.keystore
+
+# OS
+Thumbs.db
+.DS_Store
