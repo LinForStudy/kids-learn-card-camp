@@ -1,4 +1,4 @@
-﻿const MATH_LEVELS = [
+const MATH_LEVELS = [
   { id: "add20", name: "20以内加减", desc: "适合热身", reward: 2 },
   { id: "compare", name: "比大小", desc: "看清数字关系", reward: 2 },
   { id: "pattern", name: "找规律", desc: "观察数列", reward: 3 },
@@ -14,9 +14,23 @@ function shuffleList(list) {
   return [...list].sort(() => Math.random() - 0.5);
 }
 
-function uniqueOptions(answer, candidates) {
-  const values = [answer, ...candidates.filter((item) => item !== answer)];
-  return shuffleList([...new Set(values)]).slice(0, 3);
+function uniqueOptions(answer, candidates, count) {
+  if (!count) count = 4;
+  var values = [answer];
+  
+  var pool = candidates.filter(function (item) { return item !== answer; });
+  for (var i = 0; i < pool.length && values.length < count; i++) {
+    if (values.indexOf(pool[i]) === -1) values.push(pool[i]);
+  }
+  
+  var n = 0;
+  while (values.length < count) {
+    n++;
+    var extra = String(parseInt(answer, 10) + count + n);
+    if (values.indexOf(extra) === -1) values.push(extra);
+  }
+  
+  return shuffleList(values);
 }
 
 function makeMathQuestion(levelIndex) {
@@ -25,7 +39,7 @@ function makeMathQuestion(levelIndex) {
     const a = randInt(5, 99);
     const b = randInt(5, 99);
     const answer = a > b ? ">" : a < b ? "<" : "=";
-    return { level, prompt: `${a}  ?  ${b}`, hint: "选择正确的符号", answer, options: shuffleList([">", "<", "="]) };
+    return { level, prompt: `${a}  ?  ${b}`, hint: "选择正确的符号", answer, options: shuffleList([">", "<", "=", "≠"]) };
   }
   if (level.id === "pattern") {
     const start = randInt(1, 12);

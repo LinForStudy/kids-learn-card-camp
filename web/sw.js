@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "kids-learn-card-camp-portrait-hi-fi-v1";
+﻿const CACHE_NAME = "kids-learn-card-camp-portrait-hi-fi-v16";
 const ASSETS = [
   "./",
   "./index.html",

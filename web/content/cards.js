@@ -90,6 +90,16 @@ function tagsFor(type, faction, rarity) {
   return tags;
 }
 
+const TYPE_ART_MAP = {
+  "步兵": "assets/cards/art-infantry.webp",
+  "坦克": "assets/cards/art-tank.webp",
+  "火炮": "assets/cards/art-artillery.webp",
+  "飞机": "assets/cards/art-aircraft.webp",
+  "补给": "assets/cards/art-supply.webp",
+  "防御工事": "assets/cards/art-fortification.webp",
+  "战术指令": "assets/cards/art-tactic.webp"
+};
+
 const CARD_POOL = FACTION_DEFS.flatMap((faction) => faction.names.map((name, index) => {
   const type = TYPE_PATTERN[index];
   const rarity = RARITY_PATTERN[index];
@@ -110,12 +120,13 @@ const CARD_POOL = FACTION_DEFS.flatMap((faction) => faction.names.map((name, ind
     flavor: `${faction.motto}，用于儿童策略演练。`,
     tags: tagsFor(type, faction.name, rarity),
     maxCopies: rarity === "传说" ? 1 : 2,
-    artKey: `${faction.art}${number}`
+    artKey: `${faction.art}${number}`,
+    artImage: TYPE_ART_MAP[type] || "assets/cards/art-infantry.webp"
   };
 }));
 
 const DEFAULT_DECKS = [
-  { id: "scout", name: "侦察小队", style: "均衡型", desc: "适合新手，单位、补给和守备都齐。", cards: ["steel-01", "steel-01", "steel-02", "sky-01", "supply-01", "supply-02", "guard-01", "guard-08", "tactic-01", "vanguard-01", "vanguard-02", "vanguard-08"] },
+  { id: "scout", name: "侦察小队", style: "均衡型", desc: "适合新手，包含稀有和史诗卡牌。", cards: ["steel-01", "steel-02", "steel-03", "steel-09", "steel-15", "sky-01", "supply-01", "supply-02", "guard-01", "vanguard-02", "vanguard-09", "vanguard-15"] },
   { id: "steel-push", name: "钢铁推进", style: "步兵 + 坦克", desc: "适合正面推进。", cards: ["steel-01", "steel-02", "steel-03", "steel-03", "steel-04", "steel-09", "steel-10", "steel-15", "supply-01", "guard-08", "tactic-02", "vanguard-07"] },
   { id: "sky-aid", name: "天空支援", style: "飞机 + 侦察", desc: "适合快速打击。", cards: ["sky-01", "sky-02", "sky-09", "sky-10", "sky-10", "sky-16", "supply-06", "supply-10", "tactic-10", "tactic-11", "guard-06", "vanguard-10"] },
   { id: "guard-line", name: "稳固防线", style: "防御工事 + 总部保护", desc: "适合防守反击。", cards: ["guard-01", "guard-02", "guard-08", "guard-08", "guard-12", "guard-13", "guard-15", "supply-03", "supply-04", "steel-05", "tactic-03", "tactic-05"] },
@@ -124,7 +135,7 @@ const DEFAULT_DECKS = [
 ];
 
 const AI_DECKS = [
-  { id: "ai-newbie", name: "新手演练", style: "均衡", cards: DEFAULT_DECKS[0].cards },
+  { id: "ai-newbie", name: "新手演练", style: "均衡", cards: ["steel-01", "steel-01", "steel-02", "sky-01", "sky-02", "supply-01", "supply-02", "guard-01", "guard-02", "vanguard-01", "vanguard-02", "vanguard-03"] },
   { id: "ai-front", name: "前线训练", style: "推进", cards: DEFAULT_DECKS[1].cards },
   { id: "ai-hq", name: "总部挑战", style: "守备", cards: DEFAULT_DECKS[3].cards }
 ];

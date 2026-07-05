@@ -83,17 +83,20 @@
     const card = getCard(s.hand[handIndex]);
     s.action -= card.cost;
     s.hand.splice(handIndex, 1);
+    var result = { ok: true, cardId: card.id, cardName: card.name, unitUid: null };
     if (card.type === "战术指令") {
       resolveTactic(battle, owner, card);
       s.discard.push(card.id);
       log(battle, `${s.label}使用 ${card.name}。`);
     } else {
-      s.support.push(unitFromCard(card, owner));
+      var unit = unitFromCard(card, owner);
+      s.support.push(unit);
+      result.unitUid = unit.uid;
       resolveDeploySkill(battle, owner, card);
       log(battle, `${s.label}部署 ${card.name} 到支援区。`);
     }
     checkEnd(battle);
-    return { ok: true };
+    return result;
   }
 
   function resolveDeploySkill(battle, owner, card) {
@@ -152,7 +155,7 @@
     if (card.skill.includes("推进到前线时：抽")) draw(battle, owner);
     if (card.skill.includes("推进到前线时：修复")) s.hq = Math.min(HQ_MAX, s.hq + 1);
     log(battle, `${s.label}推进 ${card.name} 到前线。`);
-    return { ok: true };
+    return { ok: true, unitUid: unit.uid, cardName: card.name };
   }
 
   function attackReason(battle, owner, uid, targetUid = "hq") {
@@ -185,23 +188,34 @@
     const card = getCard(unit.cardId);
     s.action -= card.actionCost;
     unit.attacked = true;
+    var result = { ok: true, attackerUid: uid, targetUid: targetUid, damage: 0, targetKilled: false, counterDamage: 0, attackerKilled: false };
     if (targetUid === "hq") {
       const bonus = card.skill.includes("额外造成 1") ? 1 : 0;
-      e.hq -= unit.attack + bonus;
-      log(battle, `${card.name} 攻击总部，造成 ${unit.attack + bonus} 点演练伤害。`);
+      var dmg = unit.attack + bonus;
+      e.hq -= dmg;
+      result.damage = dmg;
+      result.targetKilled = e.hq <= 0;
+      log(battle, `${card.name} 攻击总部，造成 ${dmg} 点演练伤害。`);
     } else {
       const target = e.front.find((item) => item.uid === targetUid) || e.support.find((item) => item.uid === targetUid);
       if (target) {
+        var targetHpBefore = target.health;
         damageUnit(battle, opponent(owner), target, unit.attack);
+        result.damage = unit.attack;
+        result.targetKilled = target.health <= 0;
         if (e.front.some((item) => item.uid === target.uid) && s.front.some((item) => item.uid === unit.uid)) {
-          damageUnit(battle, owner, unit, getCard(target.cardId).attack);
+          var counterAtk = getCard(target.cardId).attack;
+          var attackerHpBefore = unit.health;
+          damageUnit(battle, owner, unit, counterAtk);
+          result.counterDamage = counterAtk;
+          result.attackerKilled = unit.health <= 0;
         }
         log(battle, `${card.name} 攻击目标单位。`);
       }
     }
     if (card.skill.includes("攻击后：抽牌")) draw(battle, owner);
     checkEnd(battle);
-    return { ok: true };
+    return result;
   }
 
   function damageUnit(battle, owner, unit, amount) {
@@ -237,28 +251,66 @@
   function endPlayerTurn(battle) {
     if (!battle.active) return;
     battle.phase = "enemy";
-    enemyTurn(battle);
+    startEnemyTurn(battle);
+  }
+
+  function startEnemyTurn(battle) {
+    startTurn(battle, "enemy");
+  }
+
+  function planNextEnemyAction(battle) {
+    var hqAttacker = [...battle.enemy.front, ...battle.enemy.support].find(function (unit) { return !attackReason(battle, "enemy", unit.uid, "hq"); });
+    if (hqAttacker) return { type: "attack", attackerUid: hqAttacker.uid, targetUid: "hq" };
+    var threat = battle.player.front.slice().sort(function (a, b) { return b.attack - a.attack; })[0];
+    var attackUnit = [...battle.enemy.front, ...battle.enemy.support].find(function (unit) { return threat && !attackReason(battle, "enemy", unit.uid, threat.uid); });
+    if (attackUnit && threat) return { type: "attack", attackerUid: attackUnit.uid, targetUid: threat.uid };
+    var movable = battle.enemy.support.find(function (unit) { return !moveReason(battle, "enemy", unit.uid); });
+    if (movable) return { type: "advance", unitUid: movable.uid };
+    var deployIndex = battle.enemy.hand.findIndex(function (id, index) { return !deployReason(battle, "enemy", index) && getCard(id).type !== "战术指令"; });
+    if (deployIndex >= 0) return { type: "deploy", handIndex: deployIndex };
+    var tacticIndex = battle.enemy.hand.findIndex(function (id, index) { return !deployReason(battle, "enemy", index); });
+    if (tacticIndex >= 0) return { type: "tactic", handIndex: tacticIndex };
+    return null;
+  }
+
+  function executeEnemyAction(battle, action) {
+    if (action.type === "attack") {
+      var attacker = [...battle.enemy.front, ...battle.enemy.support].find(function (u) { return u.uid === action.attackerUid; });
+      var attackerName = attacker ? getCard(attacker.cardId).name : "敌方";
+      var targetName = action.targetUid === "hq" ? "总部" : "";
+      if (action.targetUid !== "hq") {
+        var target = [...battle.player.front, ...battle.player.support].find(function (u) { return u.uid === action.targetUid; });
+        targetName = target ? getCard(target.cardId).name : "目标";
+      }
+      var result = attack(battle, "enemy", action.attackerUid, action.targetUid);
+      return { ...result, type: "attack", attackerUid: action.attackerUid, targetUid: action.targetUid, attackerName: attackerName, targetName: targetName };
+    } else if (action.type === "advance") {
+      var unit = battle.enemy.support.find(function (u) { return u.uid === action.unitUid; });
+      var cardName = unit ? getCard(unit.cardId).name : "单位";
+      var result = moveToFront(battle, "enemy", action.unitUid);
+      return { ...result, type: "advance", unitUid: action.unitUid, cardName: cardName };
+    } else if (action.type === "deploy" || action.type === "tactic") {
+      var cardId = battle.enemy.hand[action.handIndex];
+      var cardName = getCard(cardId).name;
+      var result = deploy(battle, "enemy", action.handIndex);
+      return { ...result, type: action.type, cardName: cardName };
+    }
+    return { ok: false, type: action.type };
+  }
+
+  function endEnemyTurn(battle) {
+    if (battle.active) startTurn(battle, "player");
   }
 
   function enemyTurn(battle) {
-    startTurn(battle, "enemy");
-    let guard = 0;
-    while (guard < 8) {
-      guard += 1;
-      const hqAttacker = [...battle.enemy.front, ...battle.enemy.support].find((unit) => !attackReason(battle, "enemy", unit.uid, "hq"));
-      if (hqAttacker) { attack(battle, "enemy", hqAttacker.uid, "hq"); continue; }
-      const threat = battle.player.front.slice().sort((a, b) => b.attack - a.attack)[0];
-      const attackUnit = [...battle.enemy.front, ...battle.enemy.support].find((unit) => threat && !attackReason(battle, "enemy", unit.uid, threat.uid));
-      if (attackUnit && threat) { attack(battle, "enemy", attackUnit.uid, threat.uid); continue; }
-      const movable = battle.enemy.support.find((unit) => !moveReason(battle, "enemy", unit.uid));
-      if (movable) { moveToFront(battle, "enemy", movable.uid); continue; }
-      const deployIndex = battle.enemy.hand.findIndex((id, index) => !deployReason(battle, "enemy", index) && getCard(id).type !== "战术指令");
-      if (deployIndex >= 0) { deploy(battle, "enemy", deployIndex); continue; }
-      const tacticIndex = battle.enemy.hand.findIndex((id, index) => !deployReason(battle, "enemy", index));
-      if (tacticIndex >= 0) { deploy(battle, "enemy", tacticIndex); continue; }
-      break;
+    startEnemyTurn(battle);
+    var action;
+    var guard = 0;
+    while ((action = planNextEnemyAction(battle)) && guard < 8) {
+      executeEnemyAction(battle, action);
+      guard++;
     }
-    if (battle.active) startTurn(battle, "player");
+    endEnemyTurn(battle);
   }
 
   function frontControl(battle) {
@@ -287,6 +339,6 @@
     return !battle.active;
   }
 
-  return { HQ_MAX, MAX_ACTION, SUPPORT_LIMIT, FRONT_LIMIT, createBattle, deploy, deployReason, moveToFront, moveReason, attack, attackReason, endPlayerTurn, frontControl, hasAction, draw };
+  return { HQ_MAX, MAX_ACTION, SUPPORT_LIMIT, FRONT_LIMIT, createBattle, deploy, deployReason, moveToFront, moveReason, attack, attackReason, endPlayerTurn, startEnemyTurn, planNextEnemyAction, executeEnemyAction, endEnemyTurn, frontControl, hasAction, draw };
 })();
 

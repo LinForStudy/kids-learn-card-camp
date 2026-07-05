@@ -13,6 +13,11 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    },
+    {
+      "src": "assets/ui/hero-commander.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
     }
   ]
 }

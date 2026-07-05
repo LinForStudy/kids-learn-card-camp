@@ -1,27 +1,23 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101A12" />
   <title>星卡指挥营</title>
+  <link rel="icon" type="image/webp" href="assets/ui/hero-commander.webp" />
+  <link rel="apple-touch-icon" href="assets/ui/hero-commander.webp" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="game-shell">
     <header class="top-status-bar">
-      <div class="commander-mark"><img src="assets/ui/crest.svg" alt="" /></div>
-      <div class="brand-block">
-        <h1>星卡指挥营</h1>
-        <p>学习 × 策略 × 成长</p>
-        <small>在学习中训练思维，在战场上指挥胜利！</small>
+      <div class="compact-header">
+        <div class="header-icon"><img src="assets/ui/hero-commander.webp" alt="" /></div>
+        <span class="header-title">星卡指挥营</span>
+        <span class="header-level" id="headerLevel">Lv.1</span>
       </div>
-      <div class="mode-badges">
-        <span>学习模式 · 友好 · 清晰 · 专注</span>
-        <span>对战模式 · 策略 · 沉浸 · 竞技</span>
-      </div>
-      <div class="camp-hero-art" aria-hidden="true"></div>
     </header>
 
     <section class="screen active" id="baseScreen">
@@ -32,11 +28,15 @@
             <div class="avatar"><img src="assets/ui/hero-commander.webp" alt="Commander" /></div>
             <div><strong>小小指挥官</strong><span id="levelText">Lv.1</span></div>
           </div>
+          <div class="xp-bar-wrap">
+            <div class="xp-bar"><i id="baseXpBar"></i></div>
+            <span class="xp-label" id="baseXpText">0 / 10</span>
+          </div>
           <div class="status-grid">
-            <span class="status-pill">★ <b id="baseStars">0</b></span>
-            <span class="status-pill">▣ <b id="baseSupplies">0</b></span>
-            <span class="status-pill">补给 <b id="basePack">0/6</b></span>
-            <span class="status-pill">卡组 <b id="baseDeckSize">12/12</b></span>
+            <span class="status-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg> <b id="baseStars">0</b></span>
+            <span class="status-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M3 12h18M12 7v14M8 3l4 4 4-4"/></svg> <b id="baseSupplies">0</b></span>
+            <span class="status-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M4 14h16M10 8v12M14 8v12M9 4h6l-3 4z"/></svg> <b id="basePack">0/6</b></span>
+            <span class="status-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M8 5v14M16 5v14M2 12h20"/></svg> <b id="baseDeckSize">12/12</b></span>
           </div>
         </section>
 
@@ -81,50 +81,69 @@
     </section>
 
     <section class="screen train-mode" id="trainScreen">
-      <div class="screen-kicker light"><b>2</b><span>训练 / 学习</span><small>明亮友好，专注学习体验</small></div>
-      <div class="learn-status section-panel">
-        <div>
-          <span class="eyebrow">训练中心</span>
-          <h2>明亮、清楚、低压力学习</h2>
-          <p>答对题目会推进补给进度，学到的努力会变成卡牌成长。</p>
+      <div class="screen-kicker light"><b>2</b><span>训练 / 学习</span><small>选择一种训练开始吧</small></div>
+
+      <div class="train-goal-bar section-panel">
+        <div class="goal-head">
+          <span class="goal-label">今日目标</span>
+          <strong id="trainGoalText">0 / 5</strong>
         </div>
-        <div class="learn-goal">
-          <strong id="trainGoalText">答对 5 题</strong>
-          <div class="meter"><i id="trainGoalBar"></i></div>
+        <div class="meter segmented"><i id="trainGoalBar"></i></div>
+        <div class="goal-rewards" id="trainGoalRewards">
+          <span class="reward-list" id="recentRewards"></span>
         </div>
       </div>
+
+      <div class="suggestion-panel section-panel">
+        <div class="panel-title"><span>今日建议</span></div>
+        <div class="suggestion-content" id="suggestionContent">
+          <p>开始今天的训练吧！</p>
+        </div>
+      </div>
+
+      <div class="stats-panel section-panel">
+        <div class="panel-title"><span>学习统计</span></div>
+        <div class="stats-grid" id="statsGrid"></div>
+      </div>
+
+      <div class="achievements-panel section-panel">
+        <div class="panel-title"><span>成就徽章</span><b id="achievementCount">0/9</b></div>
+        <div class="achievements-grid" id="achievementsGrid"></div>
+      </div>
+
       <div class="training-grid">
         <article class="training-card english-card">
-          <div class="training-icon">听 ABC</div>
-          <h3>英语训练</h3>
-          <p>听音选图 / 看图选词 / 补字母</p>
-          <span id="englishToday">今日完成：0 局</span>
-          <small>奖励：星星 +2，补给进度 +1</small>
-          <div class="choice-row">
-            <button class="secondary-action" data-start-learn="listen">听音</button>
-            <button class="secondary-action" data-start-learn="look">找词</button>
-            <button class="secondary-action" data-start-learn="spell">补字母</button>
+          <div class="training-icon">
+            <img src="assets/ui/learn-english.svg" alt="" />
+          </div>
+          <div class="card-body">
+            <h3>英语训练</h3>
+            <span class="card-sub" id="englishToday">已完成 0 局</span>
+            <div class="theme-selector" id="englishThemeSelector"></div>
+            <div class="choice-row">
+              <button class="primary-action" data-start-learn="listen">听音</button>
+              <button class="secondary-action" data-start-learn="look">找词</button>
+              <button class="secondary-action" data-start-learn="spell">补字母</button>
+            </div>
           </div>
         </article>
         <article class="training-card math-card">
-          <div class="training-icon">数 123</div>
-          <h3>数学训练</h3>
-          <p>20以内加减 / 100以内加减 / 比大小 / 找规律 / 乘法启蒙</p>
-          <span id="mathLevelText">当前难度：Lv.1</span>
-          <small>奖励：星星 +2，补给进度 +1</small>
-          <button class="primary-action" data-start-learn="math">开始数学</button>
+          <div class="training-icon">
+            <img src="assets/ui/learn-math.svg" alt="" />
+          </div>
+          <div class="card-body">
+            <h3>数学训练</h3>
+            <span class="card-sub" id="mathLevelText">Lv.1 · 20以内加减</span>
+            <div class="choice-row">
+              <button class="primary-action" data-start-learn="math-add">加减</button>
+              <button class="secondary-action" data-start-learn="math-compare">比较</button>
+              <button class="secondary-action" data-start-learn="math-pattern">规律</button>
+              <button class="secondary-action" data-start-learn="math-add100">进阶</button>
+              <button class="secondary-action" data-start-learn="math-multiply">乘法</button>
+            </div>
+          </div>
         </article>
       </div>
-      <section class="section-panel recent-panel">
-        <div class="panel-title"><span>最近获得奖励</span><b id="recentRewardHint">暂无</b></div>
-        <div class="reward-list" id="recentRewards"></div>
-      </section>
-      <section class="section-panel learning-notes">
-        <div class="note-card"><b>数学风格</b><span>明亮、卡通、舒适</span></div>
-        <div class="note-card"><b>大按钮</b><span>少干扰，专注学习</span></div>
-        <div class="note-card"><b>即时反馈</b><span>鼓励继续练习</span></div>
-        <div class="note-card"><b>温和错误</b><span>答错不扣分，不暴露答案</span></div>
-      </section>
     </section>
 
     <section class="screen play-mode" id="playScreen">
@@ -144,6 +163,17 @@
         <div class="answer-grid" id="answerGrid"></div>
         <div class="answer-feedback" id="answerFeedback"></div>
       </div>
+      <div class="end-turn-overlay" id="trainExitOverlay" hidden>
+        <div class="end-turn-dialog">
+          <div class="end-turn-icon">📖</div>
+          <h3 class="end-turn-title">确定退出训练？</h3>
+          <p class="end-turn-desc">当前训练进度将不会保留，已答对的题目奖励不受影响。</p>
+          <div class="end-turn-buttons">
+            <button class="primary-action" id="trainExitConfirmBtn">退出训练</button>
+            <button class="secondary-action" id="trainExitCancelBtn">继续训练</button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="screen" id="cardsScreen">
@@ -152,7 +182,25 @@
         <div class="card-tabs section-panel">
           <button class="tab-btn active" data-tab="pack">补给箱</button>
           <button class="tab-btn" data-tab="collection">收藏册</button>
-          <button class="tab-btn" data-tab="deck">当前卡组</button>
+        </div>
+
+        <div class="deck-bar section-panel" id="deckBar">
+          <div class="deck-bar-head">
+            <div>
+              <span class="eyebrow">当前卡组</span>
+              <strong id="deckBarTitle">侦察小队</strong>
+            </div>
+            <div class="deck-bar-stats">
+              <span class="deck-count" id="deckBarCount">12/12</span>
+              <span class="deck-avg" id="deckBarAvg">均费 0</span>
+            </div>
+          </div>
+          <div class="deck-bar-cards" id="deckBarCards"></div>
+          <div class="deck-bar-rules" id="deckBarRules"></div>
+          <div class="deck-bar-actions">
+            <button class="secondary-action" id="autoFillDeckBtn">自动补满</button>
+            <button class="primary-action" data-view="battle">进入战场</button>
+          </div>
         </div>
 
         <section class="card-tab-pane active" id="packPane">
@@ -161,8 +209,8 @@
             <h2 id="packTitle">标准补给箱</h2>
             <p id="packDesc">完成训练或消耗补给点，获得新卡。</p>
             <div class="status-grid">
-              <span class="status-pill">补给点 <b id="packSupply">0</b></span>
-              <span class="status-pill">卡包进度 <b id="packProgress">0/6</b></span>
+              <span class="status-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M3 12h18M12 7v14M8 3l4 4 4-4"/></svg> <b id="packSupply">0</b></span>
+              <span class="status-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M4 14h16M10 8v12M14 8v12M9 4h6l-3 4z"/></svg> <b id="packProgress">0/6</b></span>
             </div>
             <div class="mission-actions">
               <button class="primary-action" id="openPackBtn">消耗 6 补给点开包</button>
@@ -174,26 +222,12 @@
 
         <section class="card-tab-pane" id="collectionPane">
           <div class="section-panel filter-panel">
+            <div class="filter-row" id="ownedFilters"></div>
             <div class="filter-row" id="factionFilters"></div>
             <div class="filter-row" id="rarityFilters"></div>
             <div class="filter-row" id="costFilters"></div>
           </div>
           <div class="collection-grid" id="collectionGrid"></div>
-        </section>
-
-        <section class="card-tab-pane" id="deckPane">
-          <div class="section-panel deck-builder-head">
-            <div><span class="eyebrow">当前卡组</span><h2 id="deckTitle">侦察小队</h2></div>
-            <div class="deck-count" id="deckCount">12/12</div>
-          </div>
-          <div class="section-panel curve-panel" id="curvePanel"></div>
-          <div class="section-panel deck-rules" id="deckRules"></div>
-          <div class="deck-list" id="deckList"></div>
-          <div class="mission-actions sticky-actions">
-            <button class="secondary-action" id="autoFillDeckBtn">自动补满</button>
-            <button class="secondary-action" id="saveDeckBtn">保存卡组</button>
-            <button class="primary-action" data-view="battle">进入战场</button>
-          </div>
         </section>
 
         <aside class="section-panel card-detail-panel" id="cardDetailPanel"></aside>
@@ -203,27 +237,48 @@
     <section class="screen" id="battleScreen">
       <div id="battleLobby">
         <div class="screen-kicker"><b>4</b><span>战场演练</span><small>选择挑战后进入沉浸战斗桌面</small></div>
+        <div class="difficulty-selector">
+          <div class="panel-title"><span>选择对手</span><b id="difficultyHint">根据胜场推荐</b></div>
+          <div class="difficulty-btns">
+            <button class="difficulty-btn active" data-ai="0">
+              <span class="diff-icon">I</span>
+              <b>新手演练</b>
+              <small>均衡</small>
+            </button>
+            <button class="difficulty-btn" data-ai="1">
+              <span class="diff-icon">II</span>
+              <b>前线训练</b>
+              <small>推进</small>
+            </button>
+            <button class="difficulty-btn" data-ai="2">
+              <span class="diff-icon">III</span>
+              <b>总部挑战</b>
+              <small>守备</small>
+            </button>
+          </div>
+        </div>
         <div class="battle-lobby-grid">
           <section class="section-panel battle-lobby-card featured">
             <div class="battle-lobby-art" aria-hidden="true"></div>
-            <div class="panel-title"><span>当前挑战</span><b>新手演练</b></div>
-            <h2>战场演练</h2>
-            <div class="status-grid">
-              <span class="status-pill">敌方风格 <b>均衡</b></span>
-              <span class="status-pill">星星 <b>+3</b></span>
-              <span class="status-pill">补给点 <b>+2</b></span>
-              <span class="status-pill">卡包进度 <b>+1</b></span>
+            <div class="lobby-top">
+              <div class="panel-title"><span>当前挑战</span><b id="lobbyChallengeName">新手演练</b></div>
+              <div class="lobby-challenge-row">
+                <span class="lobby-enemy-style" id="lobbyEnemyStyle">均衡</span>
+                <span class="lobby-reward-hint">胜奖励 ★+3 ▣+2 包+1</span>
+              </div>
             </div>
             <div class="mission-actions">
               <button class="primary-action" id="startBattleBtn">开始演练</button>
-              <button class="secondary-action" data-view="cards" data-card-tab="deck">调整卡组</button>
+              <button class="secondary-action" data-view="cards" data-card-tab="collection">调整卡组</button>
             </div>
-          </section>
-          <section class="section-panel battle-lobby-deck">
-            <div class="panel-title"><span>当前卡组</span><b id="battleLobbyDeckCount">12/12</b></div>
-            <h3 id="battleLobbyDeckName">侦察小队</h3>
-            <p>风格：<b id="battleLobbyDeckStyle">均衡</b></p>
-            <div class="mini-card-row" id="battleLobbyDeckCards"></div>
+            <div class="lobby-deck-preview">
+              <div class="panel-title"><span>当前卡组</span><b id="battleLobbyDeckCount">12/12</b></div>
+              <div class="lobby-deck-info">
+                <h3 id="battleLobbyDeckName">侦察小队</h3>
+                <span>风格：<b id="battleLobbyDeckStyle">均衡</b></span>
+              </div>
+              <div class="mini-card-row" id="battleLobbyDeckCards"></div>
+            </div>
           </section>
         </div>
       </div>
@@ -232,12 +287,37 @@
         <div class="battle-hud-mini">
           <button class="icon-btn" id="battleBackBtn">‹</button>
           <strong id="battleHudTitle">新手演练 / 回合 1</strong>
-          <button class="icon-btn" aria-label="设置">⚙</button>
         </div>
+        <div class="enemy-turn-banner" id="enemyTurnBanner" hidden>敌方行动中…</div>
         <div class="battle-board" id="battleBoard"></div>
         <div class="battle-hand-dock">
           <div class="hand-strip" id="battleHandStrip"></div>
           <div class="battle-action-panel" id="battleActionPanel">请选择手牌或单位</div>
+        </div>
+      </div>
+      <div class="battle-result-overlay" id="battleResultOverlay" hidden>
+        <div class="battle-result-modal" id="battleResultModal"></div>
+      </div>
+      <div class="end-turn-overlay" id="endTurnOverlay" hidden>
+        <div class="end-turn-dialog">
+          <div class="end-turn-icon">⚠</div>
+          <h3 class="end-turn-title">还有单位可以行动</h3>
+          <p class="end-turn-desc">当前还有 <b id="endTurnActionCount">0</b> 个单位未执行命令。</p>
+          <div class="end-turn-buttons">
+            <button class="primary-action" id="endTurnConfirmBtn">结束回合</button>
+            <button class="secondary-action" id="endTurnCancelBtn">继续行动</button>
+          </div>
+        </div>
+      </div>
+      <div class="end-turn-overlay" id="battleExitOverlay" hidden>
+        <div class="end-turn-dialog">
+          <div class="end-turn-icon">⚔</div>
+          <h3 class="end-turn-title">确定离开战场？</h3>
+          <p class="end-turn-desc">当前对局进度将视为<b>放弃演练</b>，不会获得任何奖励。</p>
+          <div class="end-turn-buttons">
+            <button class="primary-action" id="battleExitConfirmBtn">离开战场</button>
+            <button class="secondary-action" id="battleExitCancelBtn">继续战斗</button>
+          </div>
         </div>
       </div>
     </section>
@@ -253,11 +333,11 @@
   </main>
 
   <nav class="bottom-nav">
-    <button class="nav-btn active" data-view="base"><span>⌂</span>基地</button>
-    <button class="nav-btn" data-view="train"><span>⚒</span>训练</button>
-    <button class="nav-btn" data-view="cards"><span>▤</span>卡库</button>
-    <button class="nav-btn" data-view="battle"><span>⚑</span>战场</button>
-    <button class="nav-btn" data-view="parent"><span>♙</span>家长</button>
+    <button class="nav-btn active" data-view="base"><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-7 9 7v12"/><path d="M9 21V13h6v8"/><circle cx="12" cy="9" r="1.5" fill="currentColor" stroke="none"/></svg></span>基地</button>
+    <button class="nav-btn" data-view="train"><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M10 7l2 2 4-4"/></svg></span>训练</button>
+    <button class="nav-btn" data-view="cards"><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M12 8l1.5 3 3.5.5-2.5 2.5.5 3.5L12 16l-3 1.5.5-3.5L7 11.5l3.5-.5z" fill="currentColor" stroke="none"/></svg></span>卡库</button>
+    <button class="nav-btn" data-view="battle"><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 7l4 4"/><path d="M7.5 19.5l-2-2"/></svg></span>战场</button>
+    <button class="nav-btn" data-view="parent"><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><circle cx="19" cy="5" r="3" stroke-width="1.5"/><path d="M19 3.5v3M17.5 5h3" stroke-width="1.5"/></svg></span>家长</button>
   </nav>
 
   <div class="toast" id="toast"></div>
